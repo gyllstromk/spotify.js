@@ -2,33 +2,33 @@
 
 Spotify search capabilities with the following features:
 
-1) Operate in the browser or node
-2) Throttle requests as per the Spotify terms of service
-3) Automatically traverse multi-page results
-4) Tested in [...]
+l. Operate in the browser or node
+2. Throttle requests as per the Spotify terms of service
+3. Automatically traverse multi-page results
+4. Tested in [...]
 
 ```js
-    spotty.artists('pixies', function(err, artists) {
-        console.log('Artists results:', artists);
+spotty.artists('pixies', function(err, artists) {
+    console.log('Artists results:', artists);
 
-        spotty.albums('Doolittle', function(err, albums) {
-            console.log('Album results:', albums);
+    spotty.albums('Doolittle', function(err, albums) {
+        console.log('Album results:', albums);
 
-            spotty.tracks('Debaser', function(err, tracks) {
-                console.log('Track results:', tracks);
-            });
+        spotty.tracks('Debaser', function(err, tracks) {
+            console.log('Track results:', tracks);
         });
     });
+});
 
-    // Or, stream results as they arrive ...
+// Or, stream results as they arrive ...
 
-    spotty.tracks('love').forEach(function(track) {
-        if (track === null) {
-            // finished
-        } else {
-            console.log('Track result:', track);
-        }
-    });
+spotty.tracks('love').forEach(function(track) {
+    if (track === null) {
+        // finished
+    } else {
+        console.log('Track result:', track);
+    }
+});
 ```
 
 ## Getting started (browser)
