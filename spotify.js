@@ -1,6 +1,5 @@
 /**
  * spotify.js ~ spotify search for the browser/node.
- *
  */
 
 (function() {
@@ -20,8 +19,9 @@
                 throw new ReferenceError('jQuery not defined');
             }
 
+            var root = this;
             define = function(ignore, value) {
-                spotty = value($); // set spotty as global
+                root.spotify = value($); // set spotty as global
             };
         }
     }

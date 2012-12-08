@@ -12,16 +12,6 @@ describe('Album search', function() {
 
     var query = 'pixies doolittle';
     var expectedAlbums = [ 'Doolittle', 'Pixies\' Doolittle Tribute' ];
-    var expectedTracks = [ 'Here Comes Your Man', 'Debaser',
-                           'Wave Of Mutilation', 'Hey', 'La La Love You',
-                           'Monkey Gone To Heaven', 'Tame', 'I Bleed',
-                           'Gouge Away', 'Mr. Grieves', 'Dead', 'No 13 Baby',
-                           'Crackity Jones', 'There Goes My Gun', 'Silver',
-                           'Hey', 'Wave of Mutilation', 'Here Comes Your Man',
-                           'Crackity Jones', 'Debaser', 'Tame', 'I Bleed',
-                           'Mr. Grieves', 'Monkey Gone to Heaven', 'Silver',
-                           'Gouge Away', 'Dead', 'La La Love You',
-                           'No. 13 Baby', 'There Goes My Gun' ];
 
     it('Correct albums in array results', function(done) {
         require('./nock/albums')();

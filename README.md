@@ -8,13 +8,13 @@ Spotify search capabilities with the following features:
  4.  Tested in [...]
 
 ```js
-spotty.artists('pixies', function(err, artists) {
+spotify.artists('pixies', function(err, artists) {
     console.log('Artists results:', artists);
 
-    spotty.albums('Doolittle', function(err, albums) {
+    spotify.albums('Doolittle', function(err, albums) {
         console.log('Album results:', albums);
 
-        spotty.tracks('Debaser', function(err, tracks) {
+        spotify.tracks('Debaser', function(err, tracks) {
             console.log('Track results:', tracks);
         });
     });
@@ -22,7 +22,7 @@ spotty.artists('pixies', function(err, artists) {
 
 // Or, stream results as they arrive ...
 
-spotty.tracks('love').forEach(function(track) {
+spotify.tracks('love').forEach(function(track) {
     if (track === null) {
         // finished
     } else {
@@ -42,8 +42,8 @@ jQuery is required, so use the [require-jquery](http://requirejs.org/docs/jquery
 ```html
 <script data-main="/path/to/spotify.js" src="/path/to/require-jquery.js"></script>
 <script>
-  require(['spotify'], function(spotty) {
-    spotty.albums('doolittle', function(err, albums) {
+  require(['spotify'], function(spotify) {
+    spotify.albums('doolittle', function(err, albums) {
        console.log(albums);
     });
   });
@@ -56,7 +56,7 @@ jQuery is required, so use the [require-jquery](http://requirejs.org/docs/jquery
 <script src="jquery.min.js" type="text/javascript"></script>
 <script src="/path/to/spotify.js" type="text/javascript"></script>
 <script type="text/javascript">
-    spotty.albums('doolittle', function(err, albums) {
+    spotify.albums('doolittle', function(err, albums) {
        console.log(albums);
     });
 </script>
@@ -67,7 +67,7 @@ jQuery is required, so use the [require-jquery](http://requirejs.org/docs/jquery
 ```js
 var spotify = require('spotify.js');
 
-spotty.albums(query, function(err, albums) {
+spotify.albums(query, function(err, albums) {
     console.log(albums);
 });
 ```
