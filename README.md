@@ -5,7 +5,7 @@ Spotify search capabilities with the following features:
  1.  Operate in the browser (direct inclusion or [requirejs][requirejs]) or node
  2.  Throttle requests as per the Spotify terms of service
  3.  Automatically traverse multi-page results
- 4.  Tested in [...]
+ 4.  Tested.
 
 ```js
 spotify.artists('pixies', function(err, artists) {

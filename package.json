@@ -9,6 +9,7 @@
   },
   "devDependencies" : {
       "mocha": "",
+      "mocha-phantomjs": "",
       "assert": "",
       "nock": ""
   },
@@ -16,6 +17,6 @@
   "main" : "spotify.js",
   "version": "0.0.1",
   "scripts": {
-    "test": "mocha test -R spec --timeout 2500"
+    "test": "mocha test/node -R spec --timeout 2500"
   }
 }

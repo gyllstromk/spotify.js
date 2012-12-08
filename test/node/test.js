@@ -8,7 +8,7 @@ assert.namesEqual = function(results, expected) {
 };
 
 describe('Album search', function() {
-    var spotty = require('../spotify.js');
+    var spotty = require('../../spotify.js');
 
     var query = 'pixies doolittle';
     var expectedAlbums = [ 'Doolittle', 'Pixies\' Doolittle Tribute' ];
