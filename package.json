@@ -1,0 +1,21 @@
+{
+  "name" : "spotty",
+  "description": "Spotify search for the browser and node.",
+  "homepage": "",
+  "author": "Karl Gyllstrom <karl.gyllstrom@gmail.com>",
+  "contributors": [],
+  "dependencies": {
+      "jquery": ">=1.8.3"
+  },
+  "devDependencies" : {
+      "mocha": "",
+      "assert": "",
+      "nock": ""
+  },
+  "repository" : {"type": "git", "url": "git://github.com/gyllstromk/spotify.js.git"},
+  "main" : "spotty.js",
+  "version": "0.0.1",
+  "scripts": {
+    "test": "mocha test -R spec --timeout 2500"
+  }
+}

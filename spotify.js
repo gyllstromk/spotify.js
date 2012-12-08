@@ -1,29 +1,6 @@
 /**
- * spotty.js ~ spotify search for the browser/node.
+ * spotify.js ~ spotify search for the browser/node.
  *
- * == Usage ==
- *
- * ~~ Browser ~~
- *
- * require.js:
- *
- *    <script data-main="/path/to/spotty.js" src="/path/to/require.js"></script>
- *    <script>
- *        require(['spotty'], function(spotty) {
- *            spotty.tracks('doolittle').forEach(function(track) {
- *                console.log(track);
- *            });
- *        });
- *    </script>
- *
- * without require.js
- *
- *    <script src="/path/to/spotty.js" type="text/javascript"></script>
- *    <script>
- *         spotty.tracks('doolittle').forEach(function(track) {
- *             console.log(track);
- *         });
- *    </script>
  */
 
 if (typeof define === 'undefined') {
@@ -33,14 +10,7 @@ if (typeof define === 'undefined') {
         // in node.js
 
         define = function(ignore, value) {
-            module.exports = value(function(url, callback) {
-                require('request')({
-                    url: url,
-                    json: {}
-                }, function(err, resp, body) {
-                    callback(null, body);
-                });
-            });
+            module.exports = value(require('jQuery'));
         };
     } else {
         // imported from browser w/o require.js
@@ -54,6 +24,38 @@ if (typeof define === 'undefined') {
 }
 
 define(['jquery'], function($) {
+    var Throttler = function(amount, per) {
+        /**
+         * Throttles requests at 10 per second.
+         */
+
+        var self = this;
+        var accesses = [];
+
+        this.throttle = function(callback) {
+            var now = Date.now();
+            while (accesses.length > 0) {
+                if (now - accesses[0] <= per) {
+                    break;
+                } 
+
+                accesses.shift();
+            }
+
+            if (accesses.length >= amount) {
+                setTimeout(function() {
+                    self.throttle(callback);
+                }, accesses[0] + per);
+                return;
+            }
+
+            accesses[accesses.length] = now;
+            callback();
+        };
+    };
+
+    var throttler = new Throttler(10, 1000);
+
     var ResultIterator = function(type, query) {
         /**
          * Allows full iteration over result lists, even if result list spans
@@ -66,25 +68,24 @@ define(['jquery'], function($) {
         var meta;
 
         var search = function(type, query, page, callback) {
-            // choose our url getter based on whether we're in node or browser
-            var urlGetter = typeof module !== 'undefined' ?
-                            $ :
-                                
-                function urlGetter(url, callback) {
-                    $.getJSON(url, function(result) {
-                        callback(null, result);
-                    }).error(function(err) {
-                        callback(err || {});
-                    });
-                };
+            throttler.throttle(function() {
+                var url = 'http://ws.spotify.com/search/1/' + type + '.json?q=' +
+                          query + '&page=' + page;
 
-            var url = 'http://ws.spotify.com/search/1/' + type + '.json?q=' +
-                      query + '&page=' + page;
-
-            urlGetter(url, callback);
+                $.getJSON(url, function(result) {
+                    callback(null, result);
+                }).error(function(err) {
+                    console.log('eeer', err);
+                    callback(err || {});
+                });
+            });
         };
 
-        this._forEach = function(callback) {
+        this.forEach = function(callback) {
+            /**
+             * Stream results; receive null on end of stream.
+             */
+
             if (! results) {
                 search(type, query, page, function(err, result) {
                     if (err) {
@@ -93,7 +94,7 @@ define(['jquery'], function($) {
 
                     meta = result.info;
                     results = result[type + 's'];
-                    return self._forEach(callback);
+                    return self.forEach(callback);
                 });
             } else {
                 results.forEach(callback);
@@ -110,7 +111,7 @@ define(['jquery'], function($) {
         this.toArray = function(callback) {
             var array = [];
 
-            this._forEach(function(each) {
+            this.forEach(function(each) {
                 if (each === null) {
                     return callback(null, array);
                 }
@@ -120,29 +121,39 @@ define(['jquery'], function($) {
         };
     };
 
+    function getIterator(type, query, callback) {
+        var iter = new ResultIterator(type, query);
+
+        if (callback) {
+            iter.toArray(callback);
+        } else {
+            return iter;
+        }
+    }
+
     return {
         albums: function(query, callback) {
             /**
              * Search albums.
              */
 
-            return new ResultIterator('album', query).toArray(callback);
+            return getIterator('album', query, callback);
         },
 
-        artists: function(query) {
+        artists: function(query, callback) {
             /**
              * Search artists.
              */
 
-            return new ResultIterator('artist', query);
+            return getIterator('artist', query, callback);
         },
 
-        tracks: function(query) {
+        tracks: function(query, callback) {
             /**
              * Search tracks.
              */
 
-            return new ResultIterator('track', query);
+            return getIterator('track', query, callback);
         }
     };
 });
