@@ -3,157 +3,161 @@
  *
  */
 
-if (typeof define === 'undefined') {
-    // not using requirejs
+(function() {
+    if (typeof define === 'undefined') {
+        // not using requirejs
 
-    if (typeof module !== 'undefined') {
-        // in node.js
+        if (typeof module !== 'undefined' && module.exports) {
+            // in node.js
 
-        define = function(ignore, value) {
-            module.exports = value(require('jQuery'));
-        };
-    } else {
-        // imported from browser w/o require.js
+            define = function(ignore, value) {
+                module.exports = value(require('jQuery'));
+            };
+        } else {
+            // imported from browser w/o require.js
 
-        ! jQuery; // throws reference error if jquery not defined
+            if (typeof jQuery === 'undefined') {
+                throw new ReferenceError('jQuery not defined');
+            }
 
-        define = function(ignore, value) {
-            spotty = value($); // set spotty as global
-        };
+            define = function(ignore, value) {
+                spotty = value($); // set spotty as global
+            };
+        }
     }
-}
 
-define(['jquery'], function($) {
-    var Throttler = function(amount, per) {
-        /**
-         * Throttles requests at 10 per second.
-         */
-
-        var self = this;
-        var accesses = [];
-
-        this.throttle = function(callback) {
-            var now = Date.now();
-            while (accesses.length > 0) {
-                if (now - accesses[0] <= per) {
-                    break;
-                } 
-
-                accesses.shift();
-            }
-
-            if (accesses.length >= amount) {
-                setTimeout(function() {
-                    self.throttle(callback);
-                }, accesses[0] + per);
-                return;
-            }
-
-            accesses[accesses.length] = now;
-            callback();
-        };
-    };
-
-    var throttler = new Throttler(10, 1000);
-
-    var ResultIterator = function(type, query) {
-        /**
-         * Allows full iteration over result lists, even if result list spans
-         * multiple calls due to 100 limit.
-         */
-
-        var self = this;
-        var results;
-        var page = 1;
-        var meta;
-
-        var search = function(type, query, page, callback) {
-            throttler.throttle(function() {
-                var url = 'http://ws.spotify.com/search/1/' + type + '.json?q=' +
-                          query + '&page=' + page;
-
-                $.getJSON(url, function(result) {
-                    callback(null, result);
-                }).error(function(err) {
-                    console.log('eeer', err);
-                    callback(err || {});
-                });
-            });
-        };
-
-        this.forEach = function(callback) {
+    define(['jquery'], function($) {
+        var Throttler = function(amount, per) {
             /**
-             * Stream results; receive null on end of stream.
+             * Throttles requests at 10 per second.
              */
 
-            if (! results) {
-                search(type, query, page, function(err, result) {
-                    if (err) {
-                        throw new Error('could not retrieve results');
+            var self = this;
+            var accesses = [];
+
+            this.throttle = function(callback) {
+                var now = Date.now();
+                while (accesses.length > 0) {
+                    if (now - accesses[0] <= per) {
+                        break;
+                    } 
+
+                    accesses.shift();
+                }
+
+                if (accesses.length >= amount) {
+                    setTimeout(function() {
+                        self.throttle(callback);
+                    }, accesses[0] + per);
+                    return;
+                }
+
+                accesses[accesses.length] = now;
+                callback();
+            };
+        };
+
+        var throttler = new Throttler(10, 1000);
+
+        var ResultIterator = function(type, query) {
+            /**
+             * Allows full iteration over result lists, even if result list spans
+             * multiple calls due to 100 limit.
+             */
+
+            var self = this;
+            var results;
+            var page = 1;
+            var meta;
+
+            var search = function(type, query, page, callback) {
+                throttler.throttle(function() {
+                    var url = 'http://ws.spotify.com/search/1/' + type + '.json?q=' +
+                              query + '&page=' + page;
+
+                    $.getJSON(url, function(result) {
+                        callback(null, result);
+                    }).error(function(err) {
+                        console.log('eeer', err);
+                        callback(err || {});
+                    });
+                });
+            };
+
+            this.forEach = function(callback) {
+                /**
+                 * Stream results; receive null on end of stream.
+                 */
+
+                if (! results) {
+                    search(type, query, page, function(err, result) {
+                        if (err) {
+                            throw new Error('could not retrieve results');
+                        }
+
+                        meta = result.info;
+                        results = result[type + 's'];
+                        return self.forEach(callback);
+                    });
+                } else {
+                    results.forEach(callback);
+                    if (meta.offset + meta.limit < meta.num_results) {
+                        page++;
+                        results = null;
+                        this.forEach(callback);
+                    } else {
+                        callback(null); // we're done
+                    }
+                }
+            };
+
+            this.toArray = function(callback) {
+                var array = [];
+
+                this.forEach(function(each) {
+                    if (each === null) {
+                        return callback(null, array);
                     }
 
-                    meta = result.info;
-                    results = result[type + 's'];
-                    return self.forEach(callback);
+                    array[array.length] = each;
                 });
-            } else {
-                results.forEach(callback);
-                if (meta.offset + meta.limit < meta.num_results) {
-                    page++;
-                    results = null;
-                    this.forEach(callback);
-                }
+            };
+        };
 
-                callback(null); // we're done
+        function getIterator(type, query, callback) {
+            var iter = new ResultIterator(type, query);
+
+            if (callback) {
+                iter.toArray(callback);
+            } else {
+                return iter;
+            }
+        }
+
+        return {
+            albums: function(query, callback) {
+                /**
+                 * Search albums.
+                 */
+
+                return getIterator('album', query, callback);
+            },
+
+            artists: function(query, callback) {
+                /**
+                 * Search artists.
+                 */
+
+                return getIterator('artist', query, callback);
+            },
+
+            tracks: function(query, callback) {
+                /**
+                 * Search tracks.
+                 */
+
+                return getIterator('track', query, callback);
             }
         };
-
-        this.toArray = function(callback) {
-            var array = [];
-
-            this.forEach(function(each) {
-                if (each === null) {
-                    return callback(null, array);
-                }
-
-                array[array.length] = each;
-            });
-        };
-    };
-
-    function getIterator(type, query, callback) {
-        var iter = new ResultIterator(type, query);
-
-        if (callback) {
-            iter.toArray(callback);
-        } else {
-            return iter;
-        }
-    }
-
-    return {
-        albums: function(query, callback) {
-            /**
-             * Search albums.
-             */
-
-            return getIterator('album', query, callback);
-        },
-
-        artists: function(query, callback) {
-            /**
-             * Search artists.
-             */
-
-            return getIterator('artist', query, callback);
-        },
-
-        tracks: function(query, callback) {
-            /**
-             * Search tracks.
-             */
-
-            return getIterator('track', query, callback);
-        }
-    };
-});
+    });
+})();

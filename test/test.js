@@ -41,11 +41,15 @@ describe('Album search', function() {
     });
 
     it('Correct tracks in array results', function(done) {
-        require('./nock/tracks');
+        var expectedTracks = require('./nock/tracks');
 
-        spotty.tracks(query, function(err, results) {
-            assert.namesEqual(results, expectedTracks);
-            done(err);
+        spotty.tracks('doolittle').forEach(function(each) {
+            if (each === null) {
+                return done();
+            }
+
+            assert.equal(each.name, expectedTracks[0]);
+            expectedTracks.shift();
         });
     });
 
