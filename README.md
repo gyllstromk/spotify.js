@@ -2,10 +2,10 @@
 
 Spotify search capabilities with the following features:
 
-l.  Operate in the browser or node
-2.  Throttle requests as per the Spotify terms of service
-3.  Automatically traverse multi-page results
-4.  Tested in [...]
+ l.  Operate in the browser or node
+ 2.  Throttle requests as per the Spotify terms of service
+ 3.  Automatically traverse multi-page results
+ 4.  Tested in [...]
 
 ```js
 spotty.artists('pixies', function(err, artists) {
