@@ -40,9 +40,9 @@ Use with either [requirejs](http://requirejs.org/) or raw include.
 jQuery is required, so use the [require-jquery](http://requirejs.org/docs/jquery.html) approach:
 
 ```html
-<script data-main="/path/to/spotty.js" src="/path/to/require-jquery.js"></script>
+<script data-main="/path/to/spotify.js" src="/path/to/require-jquery.js"></script>
 <script>
-  require(['spotty'], function(spotty) {
+  require(['spotify'], function(spotty) {
     spotty.albums('doolittle', function(err, albums) {
        console.log(albums);
     });
@@ -54,7 +54,7 @@ jQuery is required, so use the [require-jquery](http://requirejs.org/docs/jquery
 
 ```html
 <script src="jquery.min.js" type="text/javascript"></script>
-<script src="/path/to/spotty.js" type="text/javascript"></script>
+<script src="/path/to/spotify.js" type="text/javascript"></script>
 <script type="text/javascript">
     spotty.albums('doolittle', function(err, albums) {
        console.log(albums);
