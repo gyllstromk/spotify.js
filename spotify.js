@@ -78,7 +78,6 @@
                     $.getJSON(url, function(result) {
                         callback(null, result);
                     }).error(function(err) {
-                        console.log('eeer', err);
                         callback(err || {});
                     });
                 });
