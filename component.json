@@ -2,7 +2,7 @@
   "name": "spotify",
   "version": "0.0.1",
   "main": [
-    "./spotify.js",
+    "./spotify.js"
   ],
   "description": "Spotify search for the browser and node.",
   "repository": {
