@@ -1,5 +1,10 @@
 # Spotify.js: Spotify search in the browser and node.
 
+Install via npm (node) or bower (browser):
+
+    $ npm install spotify.js
+    $ bower install spotify
+
 Spotify search capabilities with the following features:
 
  1.  Operate in the browser (direct inclusion or [requirejs][requirejs]) or node
