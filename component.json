@@ -1,0 +1,13 @@
+{
+  "name": "spotify",
+  "version": "0.0.1",
+  "main": [
+    "./spotify.js",
+  ],
+  "description": "Spotify search for the browser and node.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gyllstromk/spotify.js.git"
+  }
+}
+
