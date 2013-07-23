@@ -1,22 +1,36 @@
 {
-  "name" : "spotify.js",
+  "name": "spotify.js",
   "description": "Spotify search for the browser and node.",
   "homepage": "",
-  "author": "Karl Gyllstrom <karl.gyllstrom@gmail.com>",
+  "author": "Karl Gyllstrom",
+  "license": "BSD",
   "contributors": [],
   "dependencies": {
-      "jquery": ">=1.8.3"
+    "jsdom": "~0.8.0",
+    "jquery": "~1.8.3"
   },
-  "devDependencies" : {
-      "mocha": "",
-      "mocha-phantomjs": "",
-      "assert": "",
-      "nock": ""
+  "devDependencies": {
+    "nock": "~0.22.0",
+    "mocha": "~1.12.0",
+    "async": "~0.2.9"
   },
-  "repository" : {"type": "git", "url": "git://github.com/gyllstromk/spotify.js.git"},
-  "main" : "spotify.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gyllstromk/spotify.js.git"
+  },
+  "main": "spotify.js",
   "version": "0.0.1",
   "scripts": {
-    "test": "mocha test/node -R spec --timeout 2500"
-  }
+    "test": "./node_modules/.bin/mocha test/node -R spec --timeout 2500"
+  },
+  "bugs": {
+    "url": "https://github.com/gyllstromk/spotify.js/issues"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [
+    "spotify",
+    "node"
+  ]
 }
