@@ -13,8 +13,11 @@ describe('Album search', function() {
     var query = 'pixies doolittle';
     var expectedAlbums = [ 'Doolittle', 'Pixies\' Doolittle Tribute' ];
 
+    require('./nock/albums');
+    require('./nock/artists');
+    require('nock').disableNetConnect();
+
     it('Correct albums in array results', function(done) {
-        require('./nock/albums')();
         spotty.albums(query, function(err, results) {
             assert.namesEqual(results, expectedAlbums);
             done(err);
@@ -22,8 +25,6 @@ describe('Album search', function() {
     });
 
     it('Correct artists in array results', function(done) {
-        require('./nock/artists');
-
         spotty.artists(query, function(err, results) {
             assert.deepEqual(results, []);
             done(err);
@@ -44,14 +45,14 @@ describe('Album search', function() {
     });
 
     it('Correct albums in forEach results', function(done) {
-        require('./nock/albums')();
+        var expected = expectedAlbums.slice(0);
 
         spotty.albums(query).forEach(function(result) {
             if (result === null) {
                 done();
             } else {
-                assert.equal(result.name, expectedAlbums[0]);
-                expectedAlbums.shift();
+                assert.equal(result.name, expected[0]);
+                expected.shift();
             }
         });
     });
