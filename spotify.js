@@ -99,7 +99,12 @@
                         return self.forEach(callback);
                     });
                 } else {
-                    results.forEach(callback);
+                    for (var i = 0, ii = results.length; i < ii; i++) {
+                        if (callback(results[i]) === false) {
+                            return;
+                        }
+                    }
+
                     if (meta.offset + meta.limit < meta.num_results) {
                         page++;
                         results = null;

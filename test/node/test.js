@@ -56,6 +56,15 @@ describe('Album search', function() {
         });
     });
 
+    it('forEach breaks on return false', function(done) {
+        spotty.albums(query).forEach(function(result) {
+            assert.equal(result.name, expectedAlbums[0]);
+            done();
+            return false;
+        });
+    });
+
+
     it('Requests are throttled', function(done) {
         var before = Date.now();
         async.forEach([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], function(each, callback) {
