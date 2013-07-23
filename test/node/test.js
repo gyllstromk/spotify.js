@@ -64,11 +64,50 @@ describe('Album search', function() {
         });
     });
 
+    describe('slice', function () {
+        it('0 to 1', function (done) {
+            var first = true;
+            spotty.albums(query).slice(0, 1, function(result) {
+                if (first) {
+                    first = false;
+                    assert.equal(result.name, expectedAlbums[0]);
+                } else {
+                    assert.equal(result, null);
+                    done();
+                }
+            });
+        });
+
+        it('1 to 2', function (done) {
+            var first = true;
+            spotty.albums(query).slice(1, 2, function(result) {
+                if (first) {
+                    first = false;
+                    assert.equal(result.name, expectedAlbums[1]);
+                } else {
+                    assert.equal(result, null);
+                    done();
+                }
+            });
+        });
+
+        it('0 to 2', function (done) {
+            var index = 0;
+            spotty.albums(query).slice(0, 2, function(result) {
+                if (index < 2) {
+                    assert.equal(result.name, expectedAlbums[index]);
+                    index += 1;
+                } else {
+                    assert.equal(result, null);
+                    done();
+                }
+            });
+        });
+    });
 
     it('Requests are throttled', function(done) {
         var before = Date.now();
         async.forEach([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], function(each, callback) {
-            require('./nock/albums')();
             spotty.albums(query, function(err, results) {
                 assert.equal(results.length, 2);
                 callback();

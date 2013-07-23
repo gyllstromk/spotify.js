@@ -83,6 +83,21 @@
                 });
             };
 
+            this.slice = function (start, end, callback) {
+                var i = 0;
+                this.forEach(function (each) {
+                    if (i >= start) {
+                        callback(each);
+                    }
+
+                    i += 1;
+                    if (i === end) {
+                        callback(null);
+                        return false;
+                    }
+                });
+            };
+
             this.forEach = function(callback) {
                 /**
                  * Stream results; receive null on end of stream.
