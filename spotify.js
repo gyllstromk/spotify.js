@@ -27,28 +27,29 @@
     }
 
     define(['jquery'], function($) {
-        var Throttler = function(amount, per) {
+        var Throttler = function(perSecond) {
             /**
              * Throttles requests at 10 per second.
              */
 
-            var self = this;
-            var accesses = [];
+            var self = this,
+                accesses = [],
+                second = 1000;
 
             this.throttle = function(callback) {
                 var now = Date.now();
                 while (accesses.length > 0) {
-                    if (now - accesses[0] <= per) {
+                    if (now - accesses[0] <= second) {
                         break;
                     } 
 
                     accesses.shift();
                 }
 
-                if (accesses.length >= amount) {
+                if (accesses.length >= perSecond) {
                     setTimeout(function() {
                         self.throttle(callback);
-                    }, accesses[0] + per);
+                    }, second - (now - accesses[0]));
                     return;
                 }
 
