@@ -20,7 +20,7 @@
     "url": "git://github.com/gyllstromk/spotify.js.git"
   },
   "main": "spotify.js",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": {
     "pretest": "./node_modules/.bin/jshint .",
     "test": "./node_modules/.bin/mocha test/node -R spec --timeout 2500"
