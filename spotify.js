@@ -27,28 +27,29 @@
     }
 
     define(['jquery'], function($) {
-        var Throttler = function(amount, per) {
+        var Throttler = function(perSecond) {
             /**
              * Throttles requests at 10 per second.
              */
 
-            var self = this;
-            var accesses = [];
+            var self = this,
+                accesses = [],
+                second = 1000;
 
             this.throttle = function(callback) {
                 var now = Date.now();
                 while (accesses.length > 0) {
-                    if (now - accesses[0] <= per) {
+                    if (now - accesses[0] <= second) {
                         break;
                     } 
 
                     accesses.shift();
                 }
 
-                if (accesses.length >= amount) {
+                if (accesses.length >= perSecond) {
                     setTimeout(function() {
                         self.throttle(callback);
-                    }, accesses[0] + per);
+                    }, second - (now - accesses[0]));
                     return;
                 }
 
@@ -83,6 +84,21 @@
                 });
             };
 
+            this.slice = function (start, end, callback) {
+                var i = 0;
+                this.forEach(function (each) {
+                    if (i >= start) {
+                        callback(each);
+                    }
+
+                    i += 1;
+                    if (i === end) {
+                        callback(null);
+                        return false;
+                    }
+                });
+            };
+
             this.forEach = function(callback) {
                 /**
                  * Stream results; receive null on end of stream.
@@ -99,7 +115,12 @@
                         return self.forEach(callback);
                     });
                 } else {
-                    results.forEach(callback);
+                    for (var i = 0, ii = results.length; i < ii; i++) {
+                        if (callback(results[i]) === false) {
+                            return;
+                        }
+                    }
+
                     if (meta.offset + meta.limit < meta.num_results) {
                         page++;
                         results = null;

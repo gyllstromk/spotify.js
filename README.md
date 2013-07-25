@@ -1,5 +1,7 @@
 # Spotify.js: Spotify search in the browser and node.
 
+[![Build Status](https://travis-ci.org/gyllstromk/spotify.js.png?branch=master)](https://travis-ci.org/gyllstromk/spotify.js)
+
 Install via npm (node) or bower (browser):
 
     $ npm install spotify.js
