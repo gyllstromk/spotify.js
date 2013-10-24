@@ -11,6 +11,17 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/gyllstromk/spotify.js.git"
-  }
+  },
+  "keywords": [
+    "spotify",
+    "search"
+  ],
+  "license": "BSD",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
 }
-
