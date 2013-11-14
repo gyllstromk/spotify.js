@@ -10,7 +10,7 @@
             // in node.js
 
             define = function(ignore, value) {
-                module.exports = value(require('jQuery'));
+                module.exports = value(require('jquery'));
             };
         } else {
             // imported from browser w/o require.js
