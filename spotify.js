@@ -73,10 +73,10 @@
 
             var search = function(type, query, page, callback) {
                 throttler.throttle(function() {
-                    var url = 'http://ws.spotify.com/search/1/' + type + '.json?q=' +
-                              query + '&page=' + page;
-
-                    $.getJSON(url, function(result) {
+                    $.getJSON('http://ws.spotify.com/search/1/' + type, {
+                        q: query,
+                        page: page
+                    }, function(result) {
                         callback(null, result);
                     }).error(function(err) {
                         callback(err || {});
