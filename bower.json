@@ -1,6 +1,6 @@
 {
   "name": "spotify",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": [
     "./spotify.js"
   ],
@@ -11,6 +11,17 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/gyllstromk/spotify.js.git"
-  }
+  },
+  "keywords": [
+    "spotify",
+    "search"
+  ],
+  "license": "BSD",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
 }
-
