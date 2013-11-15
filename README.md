@@ -80,3 +80,8 @@ spotify.albums(query, function(err, albums) {
 ```
 
 [requirejs]: http://requirejs.org/
+
+# Contributers
+
+* @gyllstromk
+* @tusbar
